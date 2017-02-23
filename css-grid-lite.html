@@ -1,5 +1,5 @@
-<link rel="import" href="bower_components/polymer/polymer.html">
-<link rel="import" href="bower_components/row-adder-lite/row-adder-lite.html">
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../row-adder-lite/row-adder-lite.html">
 
 <dom-module id="css-grid-lite">
     <template>
@@ -46,8 +46,7 @@
                     type: Array,
                     value: [],
                     reflectToAttribute: false,
-                    notify: true,
-                    computed: '_computeFromRawComponents(rawcomponents)'
+                    notify: true
                 },
 
                 /*
@@ -61,10 +60,12 @@
                 }
             },
 
+            observers: [
+                '_updateRawComponents(rawcomponents)'
+            ],
+
             _computeFromRawComponents: function(rawcomponents) {
                 if(!!rawcomponents) {
-                    var data = [],
-                        i = 0;
                     for(var keys in rawcomponents) {
                         rawcomponents[keys].id = keys;
                         rawcomponents[keys].elName = rawcomponents[keys].name;
@@ -72,13 +73,14 @@
                         rawcomponents[keys].innercomponents = rawcomponents[keys].components || {};
                         rawcomponents[keys].usercontent = rawcomponents[keys].usercontent;
 
-                        data.push(rawcomponents[keys]);
+                        this.push('components', rawcomponents[keys]);
                     }
-
-                    return data;
                 }
+            },
 
-                return [];
+            _updateRawComponents:  function(rawcomponents) {
+                this.set('components', []);
+                this._computeFromRawComponents(rawcomponents);
             }
         });
     </script>
